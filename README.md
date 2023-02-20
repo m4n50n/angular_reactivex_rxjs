@@ -47,3 +47,5 @@ Es decir, nosotros crearíamos funciones o métodos que nos permitan saber cual 
 La ***Programación Funcional*** es crear un conunto de funciones que tengan un objetivo específico. Es decir, si tengo una función que reciba "A", y retorna "A + 1", siempre que yo llame a esa función retornará "A + 1". Sin efectos secundarios y sin mutar la data.
 
 <u>En conclusión</u>: Tener funciones con tareas específicas que reciban argumentos y no muten la información.
+
+![image](https://user-images.githubusercontent.com/92524023/220173581-a8df2a55-6243-4a3c-8e5c-24a253499c8e.png)
