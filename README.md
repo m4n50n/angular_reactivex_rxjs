@@ -10,9 +10,12 @@ Piezas fundamentales de la programamción reactiva:
   * Pueden ser infinitos o finitos
   * Pueden ser síncronos o asíncronos
 
-Un Observable en RxJS es una fuente de datos que emite eventos o valores a lo largo del tiempo.
-Un Observable puede tener cero, uno o muchos valores y puede terminar (completarse) o no. 
-Puede emitir valores síncrona o asincrónicamente y permite a los suscriptores registrarse para recibir estos valores o eventos.
+- Un Observable en RxJS es una fuente de datos que emite eventos o valores a lo largo del tiempo.
+- Un Observable puede tener cero, uno o muchos valores y puede terminar (completarse) o no. 
+- Puede emitir valores síncrona o asincrónicamente y permite a los suscriptores registrarse para recibir estos valores o eventos.
+
+*** **Funciones para crear Observables**
+ No crearemos observables manualmente, sino que usaremos funciones de RxJs para crearlos.
 
 * ***Subscribers***:
   * <u>Se subscriben a un observable</u>. Es decir, estar pendiente de lo que realiza el observable
