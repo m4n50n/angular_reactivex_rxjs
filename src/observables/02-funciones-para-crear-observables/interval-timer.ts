@@ -39,6 +39,7 @@ console.log("Fin comprobar asincronía interval");
  * --------------------------
  *  - Creates an Observable that starts emitting after an dueTime and emits ever increasing numbers after each period of time thereafter
  *  - El timer crea un observable que empieza a emitir valores después de una fecha específica, y luego de ese valor empieza a emitir los valores siguientes en un periodo de tiempo indicado
+ *  - Crea un observable que comienza un intervalo después de un retraso específico, emitiendo números incrementales, comenzando en0-- en cada intervalo después de las palabras.
  *  - timer(dueTime: number | Date = 0, intervalOrScheduler?: number | SchedulerLike, scheduler: SchedulerLike = asyncScheduler): Observable<number>
  */
 const timer$ = timer(2000);
@@ -46,3 +47,10 @@ const timer$ = timer(2000);
 console.log("Inicio comprobar asincronía timer");
 timer$.subscribe(observer); // Aquí se emitirá el complete porque este observable lo emite al acabar!
 console.log("Fin comprobar asincronía timer");
+
+/** Configuraciones especiales del timer */
+const timerEsp$ = timer(2000, 1000); // Aquí lo que hacemos en realidad es crear un interval pero que se inicia cuando pasan 2 segundos
+
+const hoyen5 = new Date();
+hoyen5.setSeconds(hoyen5.getSeconds() + 5);
+const timerEsp1$ = timer(hoyen5); // De esta manera podemos programar el momento en que se emitirá el valor en base al timer
