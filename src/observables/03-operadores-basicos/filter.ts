@@ -1,5 +1,5 @@
-import { range, of, from } from "rxjs";
-import { filter } from "rxjs/operators";
+import { range, of, from, fromEvent } from "rxjs";
+import { filter, map } from "rxjs/operators";
 
 /**
  * https://rxjs-dev.firebaseapp.com/api/operators/filter
@@ -51,5 +51,13 @@ const ob$ = of<Personaje[]>(...personajes)
 
 // Con from
 const ob1$ = from<Personaje[]>(personajes)
-  .pipe(filter((personaje) => personaje.tipo === "Villano"))
+  .pipe(filter(({ tipo, nombre }) => tipo === "Villano"))
   .subscribe((value) => console.log("Desde from villano", value));
+
+/** EJERCICIO 3: Cadenas de operadores */
+const keyUp$ = fromEvent<KeyboardEvent>(document, "keyup").pipe(
+  map((event) => event.code),
+  filter((code) => code === "Enter") // Esto trabajará con lo que venga del map
+);
+
+keyUp$.subscribe(console.log);

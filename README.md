@@ -33,6 +33,8 @@ No crearemos observables manualmente, sino que usaremos funciones de RxJs para c
 
 *** La idea de los operadores es que ya tengamos todos los métodos para procesar la información que emite un observable.
 
+*** Podemos encadenar operadores dentro de un pipe (separando los operadores con comas) y se respetará el orden en el que se encadenen (de arriba hacia abajo).
+
 *** Para trabajar con operadores pasaremos antes el método ***pipe***.
 
 ## Beneficios de la programación reactiva
