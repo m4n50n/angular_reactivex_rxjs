@@ -15,6 +15,7 @@ import { distinct } from "rxjs/operators";
 /** Ejercicio simple */
 const numeros$ = of(1, 1, 2, 3, 4, 4, 5, 5, 5, 6, 7, 8);
 numeros$.pipe(distinct()).subscribe(console.log); // Aquí se ve simple porque utiliza el parámetro de equidad ===, por lo que puede saber si un número es igual a otro número
+// Con el parámetro de equidad === obviamente se entiende que distinct no considerará 1 igual a "1" puesto que uno es un número y otro un string y evaluamos tanto el valor como el tipo con ===
 
 /** Ejercicio con objetos */
 interface Personaje {
