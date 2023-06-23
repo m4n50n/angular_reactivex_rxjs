@@ -15,7 +15,7 @@ Piezas fundamentales de la programamción reactiva:
 - Puede emitir valores síncrona o asincrónicamente y permite a los suscriptores registrarse para recibir estos valores o eventos.
 
 *** **Funciones para crear Observables**
- No crearemos observables manualmente, sino que usaremos funciones de RxJs para crearlos.
+No crearemos observables manualmente, sino que usaremos funciones de RxJs para crearlos.
 
 * ***Subscribers***:
   * <u>Se subscriben a un observable</u>. Es decir, estar pendiente de lo que realiza el observable
@@ -29,6 +29,12 @@ Piezas fundamentales de la programamción reactiva:
   * Son usados para **combinar** observables
   * Usados para **crear** nuevos observables
 
+*** Un Observable es el que emite todo el flujo de información, y el procedimiento de recibir todas estas cantidades de información y únicamente coger lo que nos interesa es el concepto de operador. El operador es una función que <u>se une a un observable</u> y *sirve procesar los datos que dicho observable emite*. También se pueden conectar múltiples operadores.
+
+*** La idea de los operadores es que ya tengamos todos los métodos para procesar la información que emite un observable.
+
+*** Para trabajar con operadores pasaremos antes el método ***pipe***.
+
 ## Beneficios de la programación reactiva
 
 1. Obtener información en tiempo real
@@ -41,7 +47,6 @@ Piezas fundamentales de la programamción reactiva:
 8. Fácil anexar procedimientos sin alterar el producto final
 
 ## ReactiveX
-
 ReactiveX es una API para programación asíncrona usando observables. Es una combinación de ideas de los patrones *observer*, *iterador* y *funcional*:
 
 
