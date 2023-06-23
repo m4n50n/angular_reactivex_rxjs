@@ -2,7 +2,7 @@ import { fromEvent, range } from "rxjs";
 import { map } from "rxjs/operators";
 
 /**
- * https://rxjs-dev.firebaseapp.com/api/index/function/map
+ * https://rxjs-dev.firebaseapp.com/api/operators/map
  * Nombre: map
  * Descripción:
  *  - Es el operador más común de todos y el que más se utiliza, ya que permite transformar lo que recibimos o lo que emite el observable en algo que necesitemos
