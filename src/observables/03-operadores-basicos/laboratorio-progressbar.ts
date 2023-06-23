@@ -59,7 +59,7 @@ const scroll$ = fromEvent(document, "scroll");
 
 const progress$ = scroll$.pipe(
   // map(event => calcularProcentajeScroll(event))
-  map(calcularProcentajeScroll), // Esto hace lo mismo que arriba, pero le pasamos solo la función
+  map(calcularProcentajeScroll), // Esto hace lo mismo que arriba, pero le pasamos solo la función. Sin los paréntesis se evita que la función se ejecute inmediatamente
   tap(console.log)
 );
 
