@@ -113,6 +113,72 @@ fromEvent(myInput, "keyup")
 * Pueden recibir los errores y eventos del observable
 * Desconocen todo lo que se encuentra detrás del observable
 
+**Explicación ampliada**
+
+Un ***Observable*** es una representación de una fuente de datos o de un flujo de eventos que puede cambiar con el tiempo. Puede ser cualquier tipo de flujo de datos, como una lista de elementos, eventos de un usuario, respuestas de una API, entre otros. Los Observables emiten valores y notifican a los Observadores (Observers) sobre cualquier cambio o actualización.
+
+Un ***Observer*** (observador) es un objeto que está interesado en recibir notificaciones de un Observable. Es el componente que "observa" al Observable y reacciona ante los eventos o cambios que emite. El Observer define una serie de métodos para manejar diferentes situaciones, como recibir nuevos valores, manejar errores o completar la suscripción.
+
+Un Observer en RxJs representa un objeto que define cómo reaccionar a los valores emitidos por un Observable. 
+
+Un observer se compone generalmente de tres métodos:
+  - **next(value)**: Este método se invoca cuando se emite un nuevo valor desde el Observable. El valor emitido se pasa como argumento a este método.
+  - **error(error)**: Se llama a este método cuando se produce un error en el Observable. El error se pasa como argumento a este método.
+  - **complete()**: Este método se llama cuando el Observable completa su secuencia de valores y no emitirá más valores en el futuro.
+
+Un ***Subscriber*** (suscriptor) representa el observador que está suscrito al observable y la función de suscripción define qué hacer con los valores emitidos por el observable. Es similar al Observer, pero se utiliza más comúnmente en el contexto de programación reactiva, donde se proporcionan métodos adicionales para manejar la suscripción, como cancelarla o manejar la liberación de recursos.
+
+Si tengo esto:
+```javascript
+const obs$ = new Observable<string>(subscriber => {
+  subscriber.next("Nuevo valor"); 
+  subscriber.complete(); 
+});
+
+obs$.subscribe(resp => console.log(resp));
+```
+
+El subscriber se crea al llamar al método subscribe en el observable obs$.
+
+El método ***subscribe()*** es utilizado para establecer una conexión entre un Observable y un Observer (o Subscriber). Cuando se invoca el método subscribe en un Observable, se crea una suscripción y se pasa un Observer o Subscriber como argumento. Esta suscripción permite que el Observer o Subscriber reciba las notificaciones emitidas por el Observable. El método subscribe puede aceptar diferentes argumentos adicionales, como funciones para manejar valores, errores y completar la suscripción.
+
+En resumen, el *Observable* es la fuente de datos o flujo de eventos que puede cambiar con el tiempo, el *Observer* es el componente que "observa" al Observable y reacciona ante los cambios o eventos emitidos, el *Subscriber* es una entidad que realiza la suscripción y recibe las notificaciones del Observable, y el método *subscribe* establece la conexión entre el Observable y el Observer/Subscriber, permitiendo que este último reciba las notificaciones emitidas por el Observable.
+
+```javascript
+import { Observable } from 'rxjs';
+
+// Creamos un Observable que emite números del 1 al 5 cada segundo
+const observable = new Observable<number>(observer => {
+  let count = 1;
+  const intervalId = setInterval(() => {
+    observer.next(count);
+    count++;
+
+    if (count > 5) {
+      clearInterval(intervalId);
+      observer.complete(); // Notificar que la emisión ha terminado
+    }
+  }, 1000);
+});
+
+// Observer que tiene tres métodos: next, error y complete, para manejar los valores emitidos, los errores y la finalización de la emisión, respectivamente
+const observer = {
+  next: (value: number) => console.log(`Valor recibido: ${value}`),
+  error: (error: any) => console.error(`Ocurrió un error: ${error}`),
+  complete: () => console.log('La emisión ha finalizado'),
+};
+
+// Creamos un Subscriber (opcional) del Observable para establecer la conexión entre el Observable y el Observer (o Subscriber). El Observer se pasa como argumento al método subscribe, lo que permite que el Observer reciba las notificaciones emitidas por el Observable
+const subscriber = observable.subscribe(observer);
+
+// Ejemplo adicional de uso del método subscribe, donde se proporcionan funciones separadas para manejar los valores, errores y la finalización de la emisión
+observable.subscribe(
+  value => console.log(`Valor recibido: ${value}`),
+  error => console.error(`Ocurrió un error: ${error}`),
+  () => console.log('La emisión ha finalizado')
+);
+```
+
 ## 2.2: ReactiveX
 
 ReactiveX es una API para programación asíncrona usando observables. Es una combinación de ideas de los patrones *observer*, *iterador* y *funcional*:
@@ -240,7 +306,7 @@ La diferencia entre hot observables y cold observables radica en cómo se maneja
 
 * ***Hot Observable***: Producirá eventos independientemente de si hay alguien escuchando - ej.`fromEvent(title, 'keyup')`; Imagina una transmisión en vivo de un partido de fútbol. El partido está en curso y se están generando eventos, como goles, tarjetas amarillas, etc. Los espectadores que se unen a la transmisión en cualquier momento solo pueden observar los eventos que ocurrieron después de su entrada. No pueden ver los eventos pasados, como los goles que ya han sucedido.
   
-* ***Cold Obserable***: Emite eventos una vez hay suscripciones - ej. Ejemplo: Considera una lista de reproducción de canciones en un reproductor de música. Cada vez que un suscriptor se une a la lista de reproducción, comienza desde la primera canción y recibe todas las canciones en orden. Incluso si se unen múltiples suscriptores en momentos diferentes, cada uno obtendrá todas las canciones en el mismo orden.
+* ***Cold Observable***: Emite eventos una vez hay suscripciones - ej. Ejemplo: Considera una lista de reproducción de canciones en un reproductor de música. Cada vez que un suscriptor se une a la lista de reproducción, comienza desde la primera canción y recibe todas las canciones en orden. Incluso si se unen múltiples suscriptores en momentos diferentes, cada uno obtendrá todas las canciones en el mismo orden.
 
 ```javascript
 // Ejemplo Hot Observable

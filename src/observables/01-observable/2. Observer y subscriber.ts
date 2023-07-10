@@ -1,4 +1,4 @@
-import { Observable, Observer } from "rxjs";
+import { Observable, Observer } from 'rxjs';
 
 /*
 - Un Observable en RxJs es una fuente de datos que emite eventos o valores a lo largo del tiempo.
