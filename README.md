@@ -10,8 +10,29 @@
   - [2.3: Creando Observables](#23-creando-observables)
   - [2.4: Subjects](#24-subjects)
   - [3: Funciones para crear Observables (Built in Observables)](#3-funciones-para-crear-observables-built-in-observables)
-  - [4: Recursos y documentación RxJS](#4-recursos-y-documentación-rxjs)
-  - [3.7: Hot y Cold Observables](#37-hot-y-cold-observables)
+    - [of](#of)
+    - [fromEvent](#fromevent)
+    - [range](#range)
+    - [interval](#interval)
+    - [timer](#timer)
+    - [asyncScheduler](#asyncscheduler)
+  - [4: Operadores comunes](#4-operadores-comunes)
+    - [map](#map)
+    - [filter](#filter)
+    - [tap](#tap)
+    - [reduce](#reduce)
+    - [scan](#scan)
+  - [5: Operadores no tan comunes](#5-operadores-no-tan-comunes)
+    - [take](#take)
+    - [first](#first)
+    - [takeWhile](#takewhile)
+    - [takeUntil](#takeuntil)
+    - [skip](#skip)
+    - [distinct](#distinct)
+    - [distinctUntilChanged](#distinctuntilchanged)
+    - [distinctUntilKeyChanged](#distinctuntilkeychanged)
+  - [6: Recursos y documentación RxJS](#6-recursos-y-documentación-rxjs)
+  - [7: Hot y Cold Observables](#7-hot-y-cold-observables)
 
 ## 1.0: Introducción a la programación Reactiva
 
@@ -292,15 +313,441 @@ setTimeout(() => {
 
 ## 3: Funciones para crear Observables (Built in Observables)
 
+### of
+
+*Source*: https://rxjs.dev/api/index/function/of
+
+- Función que permite crear observables en base a un listado de elementos (números o cualquier tipo de objeto)
+- Lo importante es que of emitirá los valores en secuencia uno por uno de manera síncrona, y cuando termine, se completa el observable
+
+```js
+const observable$ = of<number[]>(1, 2, 3, 4, 5, 6).subscribe(...)
+```
+
+---
+
+### fromEvent
+
+*Source*: https://rxjs.dev/api/index/function/fromEvent
+
+- Función que permite crear observables en base a un event target (es decir, de tipo Event)
+
+```js
+const observable$ = fromEvent<MouseEvent>(document, "click");.subscribe(...)
+```
+
+---
+
+### range
+
+*Source*: https://rxjs.dev/api/index/function/range
+
+- Función que permite crear observables que emiten una secuencia de números en base a un rango específico
+- Son síncronos pero pueden convertirse en asíncronos usando async scheduler
+- El número inicial es 0 por defecto
+
+```js
+const observable$ = const src$ = range(-5, 10); // La salida de esto será "-5, -4, -3, -2, -1, 0, 1, 2, 3, 4"
+// Es decir, recorre un rango de 10 elementos empezando desde el -5!!!
+```
+
+---
+
+### interval
+
+*Source*: https://rxjs.dev/api/index/function/interval
+
+- Función que permite crear observables que se emiten en base al intervalo definido (si ponemos 2000, las emisiones se harían cada 2 segundos)
+- Es un observable asíncrono por naturaleza
+- **Importante**: Aunque cancelemos la suscripción, el intervalo seguirá corriendo
+- El primer valor que emite interval es 0
+
+```js
+const interval$ = interval(1000); // (*) Mientras no exista un suscripción este observable no emitirá valores
+// El intervalo empezará en 0 por defecto
+```
+
+---
+
+### timer
+
+*Source*: https://rxjs.dev/api/index/function/timer
+
+- Función similar al interval
+- Es un observable asíncrono por naturaleza
+- Si establecemos timer(2000), diremos que después de 2 segundos emitirá el primer valor y se completará el observable y ya no se emitirán más valores
+
+```js
+const timer$ = timer(2000);
+
+console.log("Inicio comprobar asincronía timer");
+timer$.subscribe(observer); // Aquí se emitirá el complete porque este observable lo emite al acabar!
+console.log("Fin comprobar asincronía timer");
+```
+
+---
+
+### asyncScheduler
+
+*Source*: https://rxjs.dev/api/index/const/asyncScheduler
+
+- asyncScheduler no crea un observable, crea una SUSCRIPCIÓN (es decir, devuelve una suscripción), que es el producto de un subscribe (es decir, el punto subscribe de un observable) 
+
+```js
+const task = () => console.log('it works!');
+
+asyncScheduler.schedule(task, 2000);
+```
+
+## 4: Operadores comunes
+
 > ***RxJS*** proporciona una gran cantidad de operadores para manipular los datos emitidos desde un Observable y su flujo.
 
-## 4: Recursos y documentación RxJS
+### map
+
+*Source*: https://rxjs-dev.firebaseapp.com/api/operators/map
+
+- Es el operador más común de todos y el que más se utiliza, ya que permite transformar lo que recibimos o lo que emite el observable en algo que necesitemos
+
+```js
+// Para trabajar con operadores pasaremos antes el método pipe
+// Con <number, number> especificamos que la entrada es un number y la salida otro number
+range(1, 5).pipe(map<number, string>((value) => (value * 10).toString())).subscribe(console.log);
+```
+
+---
+
+### filter
+
+*Source*: https://rxjs-dev.firebaseapp.com/api/operators/filter
+
+- El operador filter sirve para filtrar las emisiones de los valores que emite el observable
+
+```js
+range(1, 10)
+  .pipe(
+    filter((value, index) => {
+      console.log("El index es: ", index); // Aquí comprobamos que el index entra pero no es emitido
+      return value % 2 === 1;
+    })
+  )
+  .subscribe((val) => console.log("Valor recibido!!: ", val));
+```
+
+---
+
+### tap
+
+*Source*: https://rxjs-dev.firebaseapp.com/api/operators/tap
+
+- Operador bastante utilizado porque ayuda mucho a ver cómo fluye la información dentro de los observables
+- El principal uso del tap es disparar efectos secundarios (ya sea un console.log o disparar alguna acción cuando la información pase a través del observable) 
+SIN MODIFICAR el flujo de datos
+- El operador tap se utiliza comúnmente para depurar, registrar o realizar acciones adicionales en los datos que se emiten en un flujo de RxJs
+- Hay que tener en cuenta que hay que hacerlo con cuidado para no disparar acciones sin querer
+- Suele ser usado solo para propósitos de depuración y acciones secundarias
+- NO DEBE USARSE para transformar datos (ya que para eso está map, filter o reduce)
+
+```js
+const numeros$ = range(1, 5);
+numeros$
+  .pipe(
+    tap((x) => {
+      console.log("tap antes de que se ejecute el subscribe", x);
+      return 100;
+    }),
+    map((val) => val * 10),
+    tap((x) => console.log("despues", x)),
+    tap({ // Creamos un observer parcial
+      next: valor => console.log("DESPUEESSSS", valor), // El next se ejecutará cada vez que el tap reciba el siguiente valor
+      complete: () => console.log("Se terminó todo") // El complete se ejecutará cuando todo el observer se complete (POR ESO SIRVE PARA LA DEPURACIÓN)
+    })
+  )
+  .subscribe((val) => console.log("subs", val));
+```
+
+---
+
+### reduce
+
+*Source*: https://rxjs-dev.firebaseapp.com/api/operators/reduce
+
+- Hace lo mismo que el método reduce de JavaScript
+- Lo que hace es aplicar una función acumuladora a las emisiones producidas por el observable
+
+```js
+interval(1000) // El primer valor que emite interval es 0
+  .pipe(
+    take(4), // Take COMPLETARÁ el observable después de la cantidad de veces que yo especifique dentro de el
+    tap(console.log), // Debugeamos lo que fluye a través del observable en este instante
+    reduce(totalReducer, 0) // No envio los paréntesis para no ejecutar la función en ese momento. El valor inicial será 0 (por defecto también)
+  )
+  .subscribe({
+    next: (val) => console.log("next", val),
+    complete: () => console.log("complete")
+  });
+```
+
+---
+
+### scan
+
+*Source*: https://rxjs-dev.firebaseapp.com/api/operators/scan
+
+- Es exactamente igual al operador reduce pero con una diferencia, y es que cuando los valores son emitidos por el observable, inmediatamente van saliendo conforme van ingresando pero regresa su valor acumulado
+
+```js
+const numbers = [1, 2, 3, 4, 5];
+const totalReducer = (acumulador: number, valorActual: number) =>
+  acumulador + valorActual;
+
+// Reduce: tenemos una única emisión con el valor final
+from(numbers)
+  .pipe(reduce(totalReducer, 0))
+  .subscribe((val) => console.log("Reduce val:", val));
+
+// Scan: emite cada valor
+from(numbers)
+  .pipe(scan(totalReducer, 0))
+  .subscribe((val) => console.log("Scan val:", val));
+```
+
+## 5: Operadores no tan comunes
+
+### take
+
+*Source*: https://rxjs-dev.firebaseapp.com/api/operators/take
+
+- Sirve para limitar la cantidad de emisiones que un observable puede tener
+- Si tengo take(2) se emitirá el primer valor, luego el segundo y justo después se completará la suscripción
+
+```js
+const numeros$ = of(1, 2, 3, 4, 5);
+numeros$.pipe(
+  tap(t => console.log(t)), // Con esto comprobamos que sólo emite 3 valores (correspondientes al take(3)) y que luego no sigue emitiendo los siguientes valores de la secuencia
+  take(3)
+)
+.subscribe({
+  next: (val) => console.log("next", val),
+  complete: () => console.log("Completado"),
+});
+```
+
+---
+
+### first
+
+*Source*: https://rxjs-dev.firebaseapp.com/api/operators/first
+
+- Simplemente toma el primer valor y completa todo
+- Si pongo first() se emitiría el primer valor y luego la suscripción se completaría y ya el observable no emitiría más
+- Adicionalmente se le puede poner una condición para que se complete ÚNICAMENTE cuando se cumpla dicha condición:
+  first(x => x >= 10)
+- SI HAY UNA CONDICIÓN SOLO SE EMITE EL PRIMER VALOR QUE CUMPLE LA CONDICIÓN Y LUEGO SE COMPLETA LA EMISIÓN
+
+```js
+// Con esto solo se emitiría el primer click
+const click$ = fromEvent<MouseEvent>(document, "click").pipe(first());
+click$.subscribe({
+  next: (val) => console.log("valor", val),
+  complete: () => "completado",
+});
+
+const click1$ = fromEvent<MouseEvent>(document, "click").pipe(
+  tap(console.log),
+  first((event) => event.clientY > 150)
+);
+click1$.subscribe({
+  next: (val) => console.log("valor click1", val),
+  complete: () => "completado click1",
+});
+```
+
+---
+
+### takeWhile
+
+*Source*: https://rxjs-dev.firebaseapp.com/api/operators/takeWhile
+
+- Permite emitir valores mientras la condición se cumpla
+
+```js
+const click$ = fromEvent<MouseEvent>(document, "click").pipe(
+  map(({ x, y }) => ({ x, y })),
+  // takeWhile(({ y }) => y <= 150) // Cuando la condición se cumple emite el complete PERO no el elemento que "rompe" esa condición
+  takeWhile(({ y }) => y <= 150, true) // Enviando true al parámetro "inclusive" hacemos que se devuelva ese elemento
+);
+
+click$.subscribe({
+  next: (val) => console.log("next", val),
+  complete: () => console.log("completado"),
+});
+```
+
+---
+
+### takeUntil
+
+*Source*: https://rxjs-dev.firebaseapp.com/api/operators/takeUntil
+
+- Es un operador que recibe como argumento otro Observable
+- Se traduce a "emite valores hasta que el segundo Observable (el que se pasa como parámetro) emita su primer valor"
+
+```js
+// Creamos un botón para que emita un valor y podamos colocarle un valor
+const boton = document.createElement("button");
+boton.innerHTML = "Detener timer";
+document.querySelector("body").append(boton);
+
+const counter$ = interval(1000);
+const clickBtn$ = fromEvent<MouseEvent>(boton, "click");
+
+counter$.pipe(
+  takeUntil(clickBtn$)
+)
+.subscribe({
+  next: val => console.log("next", val),
+  complete: () => console.log("Completado!!!") // El observable counter$ dejaría de emitir valores y se completaría en cuando se haga click en el botón y por lo tanto se emita su primer valor desdes el fromEvent
+});
+```
+
+---
+
+### skip
+
+*Source*: https://rxjs-dev.firebaseapp.com/api/operators/skip
+
+- Sirve para saltar / omitir X cantidad de emisiones INICIALES
+- Si tenemos skip(3) el observable emitirá sólo a partir del cuarto valor (incluido)
+
+```js
+// Creamos un botón para que emita un valor y podamos colocarle un valor
+const boton = document.createElement("button");
+boton.innerHTML = "Detener timer";
+document.querySelector("body").append(boton);
+
+const counter$ = interval(1000);
+const clickBtn$ = fromEvent<MouseEvent>(boton, "click").pipe(
+  skip(2) // Esto saltaría el primer y segundo click y por lo tanto emitiría a partir del segundo click que es donde se completaría el takeUntil del observable counter$
+)
+
+counter$.pipe(
+  takeUntil(clickBtn$)
+)
+.subscribe({
+  next: val => console.log("next", val),
+  complete: () => console.log("Completado!!!") // El observable counter$ dejaría de emitir valores y se completaría en cuando se haga click en el botón y por lo tanto se emita su primer valor desdes el fromEvent
+});
+```
+
+---
+
+### distinct
+
+*Source*: https://rxjs-dev.firebaseapp.com/api/operators/distinct
+
+- Únicamente deja pasar valores que no han sido previamente emitidos por el observable
+
+```js
+/** Ejercicio simple */
+const numeros$ = of(1, 1, 2, 3, 4, 4, 5, 5, 5, 6, 7, 8);
+numeros$.pipe(distinct()).subscribe(console.log); // Aquí se ve simple porque utiliza el parámetro de equidad ===, por lo que puede saber si un número es igual a otro número
+// Con el parámetro de equidad === obviamente se entiende que distinct no considerará 1 igual a "1" puesto que uno es un número y otro un string y evaluamos tanto el valor como el tipo con ===
+
+/** Ejercicio con objetos */
+interface Personaje {
+  nombre: string;
+}
+
+const personajes: Personaje[] = [
+  { nombre: "Megaman" }, // El problema es que este objeto no es igual
+  { nombre: "Batman" },
+  { nombre: "Megaman" }, // A este objeto aunque los dos sean visualmente iguales, por lo que el parámetro de equidad aquí no nos serviría
+  { nombre: "Joker" },
+  { nombre: "Megaman" },
+  { nombre: "Batman" },
+];
+
+// En este caso deberemos darle más información al distinct para que sepa comparar estos objetos
+
+from(personajes)
+  .pipe(distinct((personaje) => personaje.nombre)) // Con este predicado decimos al distinct qué tiene que comparar
+  .subscribe(console.log);
+```
+
+---
+
+### distinctUntilChanged
+
+*Source*: https://rxjs-dev.firebaseapp.com/api/operators/distinctUntilChanged
+
+- Similar a distinct() con la diferencia de que emite todos los valores siempre que la emisión ANTERIOR no sea la misma
+
+```js
+/** Ejercicio simple */
+const numeros$ = of(1, 2, "2", 1, 2, 3, 4, 4, 5, 4, 5, 5, 6, 7, 8);
+numeros$.pipe(distinctUntilChanged()).subscribe(console.log); // Aquí se ve simple porque utiliza el parámetro de equidad ===, por lo que puede saber si un número es igual a otro número
+
+/** Ejercicio con objetos */
+interface Personaje {
+  nombre: string;
+}
+
+const personajes: Personaje[] = [
+  { nombre: "Megaman" }, // El problema es que este objeto no es igual
+  { nombre: "Megaman" }, // A este objeto aunque los dos sean visualmente iguales, por lo que el parámetro de equidad aquí no nos serviría
+  { nombre: "Batman" },  
+  { nombre: "Joker" },
+  { nombre: "Megaman" },
+  { nombre: "Batman" },
+];
+
+// En este caso deberemos darle más información al distinctUntilChanged para que sepa comparar estos objetos
+
+from(personajes)
+  // Con este predicado decimos al distinctUntilChanged qué tiene que comparar
+  // La condición es que el predicado debe retornar un booleano, por lo que si es true lo que retorna, se considerarán iguales y por lo tanto el valor no se emitirá
+  .pipe(distinctUntilChanged((anterior, actual) => anterior.nombre === actual.nombre)) 
+  .subscribe(console.log);
+```
+
+---
+
+### distinctUntilKeyChanged
+
+*Source*: https://rxjs-dev.firebaseapp.com/api/operators/distinctUntilKeyChanged
+
+- Es el mismo concepto que distinctUntilChanged pero pasándole directamente la key que queremos que compruebe y así no hay que pasar ningún predicado al método
+
+```js
+/** Ejercicio con objetos */
+interface Personaje {
+  nombre: string;
+}
+
+const personajes: Personaje[] = [
+  { nombre: "Megaman" }, // El problema es que este objeto no es igual
+  { nombre: "Megaman" }, // A este objeto aunque los dos sean visualmente iguales, por lo que el parámetro de equidad aquí no nos serviría
+  { nombre: "Batman" },  
+  { nombre: "Joker" },
+  { nombre: "Megaman" },
+  { nombre: "Batman" },
+];
+
+// En este caso NO deberemos darle más información al distinctUntilKeyChanged para que sepa comparar estos objetos, sino que sólo le daremos la key que queremos que evalúe
+
+from(personajes)  
+  .pipe(distinctUntilKeyChanged("nombre")) 
+  .subscribe(console.log);
+```
+
+## 6: Recursos y documentación RxJS
 
 * [RxJS Github](https://github.com/ReactiveX/rxjs)
 * [RxMarbles](http://rxmarbles.com/)
 * [RxVision Playground](http://jaredforsyth.com/rxvision/examples/playground/)
 
-## 3.7: Hot y Cold Observables
+## 7: Hot y Cold Observables
 
 La diferencia entre hot observables y cold observables radica en cómo se manejan los eventos pasados cuando hay nuevos suscriptores. Los hot observables no transmiten los eventos pasados a los nuevos suscriptores, mientras que los cold observables proporcionan todos los eventos, incluidos los pasados, a cada suscriptor.
 

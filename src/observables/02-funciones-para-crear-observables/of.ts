@@ -5,7 +5,7 @@ import { of } from "rxjs";
  * Nombre: of
  * Descripción:
  *  - Función que permite crear observables en base a un listado de elementos (números o cualquier tipo de objeto)
- *  - Lo importante es que of emitirá los valores en secuencia uno por uno de manera síncrona, y cuandoo termine, se completa el observable
+ *  - Lo importante es que of emitirá los valores en secuencia uno por uno de manera síncrona, y cuando termine, se completa el observable
  *
  * Documentación oficial:
  * --------------------------

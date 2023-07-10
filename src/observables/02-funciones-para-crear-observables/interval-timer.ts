@@ -6,7 +6,7 @@ import { interval, timer } from "rxjs";
  * Descripción:
  *  - Función que permite crear observables que se emiten en base al intervalo definido (si ponemos 2000, las emisiones se harían cada 2 segundos)
  *  - Es un observable asíncrono por naturaleza
- *  - IMPORTANTE: aunque cancelemos la suscripción, el intervalo seguirá corriendo
+ *  - Importante: Aunque cancelemos la suscripción, el intervalo seguirá corriendo
  *  - El primer valor que emite interval es 0
  *
  * Documentación oficial:
