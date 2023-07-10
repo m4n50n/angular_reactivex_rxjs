@@ -39,6 +39,7 @@
     - [auditTime](#audittime)
   - [7: Operadores de transformación](#7-operadores-de-transformación)
     - [mergeAll](#mergeall)
+    - [mergeMap](#mergemap)
   - [8: Recursos y documentación RxJS](#8-recursos-y-documentación-rxjs)
   - [9: Hot y Cold Observables](#9-hot-y-cold-observables)
 
@@ -909,6 +910,32 @@ input$
   .subscribe((resp) => {
     console.log(resp);
   });
+```
+
+---
+
+### mergeMap
+
+
+*Source*: https://rxjs-dev.firebaseapp.com/api/operators/mergeMap
+
+- Se utiliza para transformar y combinar observables en una secuencia de emisiones
+- Toma cada valor emitido por el observable fuente y lo transforma en otro observable. Luego, combina todas las emisiones de los observables resultantes en una sola secuencia
+
+```js
+// Creamos un observable fuente con algunos valores
+const source = of(1, 2, 3);
+
+// Definimos una función que toma un valor y devuelve un observable con ese valor duplicado
+const duplicate = (value: number) => of(value, value);
+
+// Aplicamos mergeMap para transformar cada valor del observable fuente en un observable duplicado
+const example = source.pipe(
+  mergeMap(duplicate)
+);
+
+// Subscribimos y recibimos todas las emisiones de los observables resultantes
+example.subscribe(value => console.log(value));
 ```
 
 ---
