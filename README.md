@@ -34,6 +34,7 @@
   - [6: Operadores que trabajan con tiempo](#6-operadores-que-trabajan-con-tiempo)
     - [debounceTime](#debouncetime)
     - [throttleTime](#throttletime)
+    - [sampleTime](#sampletime)
   - [7: Recursos y documentación RxJS](#7-recursos-y-documentación-rxjs)
   - [8: Hot y Cold Observables](#8-hot-y-cold-observables)
 
@@ -791,6 +792,25 @@ click$.pipe(
     // Durante el conteo no se emitirá ningún valor y el siguiente valor se emitirá tras el conteo
     throttleTime(3000) 
 ).subscribe(console.log);
+```
+
+---
+
+### sampleTime
+
+*Source*: https://rxjs-dev.firebaseapp.com/api/operators/sampleTime
+
+- Se utiliza para obtener una muestra periódica de los valores emitidos por un observable a intervalos regulares de tiempo. Básicamente, te permite capturar el último valor emitido dentro de un intervalo de tiempo predefinido
+
+```js
+// Crea un observable que emite un valor cada 500 milisegundos
+const observable = interval(500);
+
+// Aplica sampleTime para obtener una muestra cada 2 segundos
+const sampledObservable = observable.pipe(sampleTime(2000));
+
+// Suscríbete al sampledObservable para recibir las muestras
+sampledObservable.subscribe(value => console.log(value));
 ```
 
 ---
