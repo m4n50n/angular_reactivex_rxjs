@@ -35,6 +35,7 @@
     - [debounceTime](#debouncetime)
     - [throttleTime](#throttletime)
     - [sampleTime](#sampletime)
+    - [sample](#sample)
   - [7: Recursos y documentación RxJS](#7-recursos-y-documentación-rxjs)
   - [8: Hot y Cold Observables](#8-hot-y-cold-observables)
 
@@ -807,7 +808,30 @@ click$.pipe(
 const observable = interval(500);
 
 // Aplica sampleTime para obtener una muestra cada 2 segundos
+// Solo obtendremos el último valor emitido dentro de cada intervalo de 2 segundos. Los valores intermedios se descartan
 const sampledObservable = observable.pipe(sampleTime(2000));
+
+// Suscríbete al sampledObservable para recibir las muestras
+sampledObservable.subscribe(value => console.log(value));
+```
+
+---
+
+### sample
+
+*Source*: https://rxjs-dev.firebaseapp.com/api/operators/sample
+
+- Se utiliza para obtener una muestra del último valor emitido por un observable en función de otro observable que actúa como "disparador"
+
+```js
+// Crea un observable que emite un valor cada 500 milisegundos
+const observable = interval(500);
+
+// Crea un observable que emite un evento 'click'
+const triggerObservable = fromEvent(document, 'click');
+
+// Aplica el operador sample para obtener una muestra del último valor emitido por 'observable' cuando ocurre un evento 'click'
+const sampledObservable = observable.pipe(sample(triggerObservable));
 
 // Suscríbete al sampledObservable para recibir las muestras
 sampledObservable.subscribe(value => console.log(value));
