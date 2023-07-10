@@ -37,8 +37,10 @@
     - [sampleTime](#sampletime)
     - [sample](#sample)
     - [auditTime](#audittime)
-  - [7: Recursos y documentación RxJS](#7-recursos-y-documentación-rxjs)
-  - [8: Hot y Cold Observables](#8-hot-y-cold-observables)
+  - [7: Operadores de transformación](#7-operadores-de-transformación)
+    - [mergeAll](#mergeall)
+  - [8: Recursos y documentación RxJS](#8-recursos-y-documentación-rxjs)
+  - [9: Hot y Cold Observables](#9-hot-y-cold-observables)
 
 ## 1.0: Introducción a la programación Reactiva
 
@@ -857,13 +859,67 @@ const auditedObservable = observable.pipe(auditTime(2000));
 auditedObservable.subscribe(value => console.log(value));
 ```
 
-## 7: Recursos y documentación RxJS
+## 7: Operadores de transformación
+
+> Los operadores de transformación en RxJS, como mergeAll, mergeMap, etc., son necesarios para manipular y transformar secuencias de eventos en flujos de datos observables. Estos operadores permiten realizar tareas como combinar, filtrar, transformar y manipular los valores emitidos por los observables.
+>
+>Supongamos que tenemos dos flujos de datos observables: uno que emite números pares y otro que emite números impares. Queremos combinar estos dos flujos y obtener un solo flujo que emita todos los números en orden ascendente. Aquí es donde entran en juego los operadores de transformación:
+
+```javascript
+import { of } from 'rxjs';
+import { mergeAll } from 'rxjs/operators';
+
+// Flujos de datos observables
+const pares$ = of(2, 4, 6);
+const impares$ = of(1, 3, 5);
+
+// Combinación de los flujos y transformación
+const numeros$ = of(pares$, impares$).pipe(
+  mergeAll(),
+  // Otros operadores de transformación si es necesario
+);
+
+// Suscripción al flujo resultante
+numeros$.subscribe(numero => console.log(numero));
+```
+
+### mergeAll
+
+
+*Source*: https://rxjs-dev.firebaseapp.com/api/operators/mergeAll
+
+- Combina los observables que se emiten dentro del flujo principal
+
+```js
+const input = document.createElement("input");
+document.querySelector("body").append(input);
+
+const input$ = fromEvent<KeyboardEvent>(input, "keyup");
+
+input$
+  .pipe(
+    debounceTime(500),
+    map((texto) =>
+      ajax.getJSON(`https://api.github.com/search/users?q=${texto}`)
+    ),
+    mergeAll()
+    // La función ajax.getJSON devuelve un observable que emite la respuesta JSON de la solicitud
+    // mergeAll combina los observables emitidos por cada evento de teclado con el observable que emite la respuesta JSON
+  )
+  .subscribe((resp) => {
+    console.log(resp);
+  });
+```
+
+---
+
+## 8: Recursos y documentación RxJS
 
 * [RxJS Github](https://github.com/ReactiveX/rxjs)
 * [RxMarbles](http://rxmarbles.com/)
 * [RxVision Playground](http://jaredforsyth.com/rxvision/examples/playground/)
 
-## 8: Hot y Cold Observables
+## 9: Hot y Cold Observables
 
 La diferencia entre hot observables y cold observables radica en cómo se manejan los eventos pasados cuando hay nuevos suscriptores. Los hot observables no transmiten los eventos pasados a los nuevos suscriptores, mientras que los cold observables proporcionan todos los eventos, incluidos los pasados, a cada suscriptor.
 
