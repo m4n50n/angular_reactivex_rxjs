@@ -31,8 +31,10 @@
     - [distinct](#distinct)
     - [distinctUntilChanged](#distinctuntilchanged)
     - [distinctUntilKeyChanged](#distinctuntilkeychanged)
-  - [6: Recursos y documentación RxJS](#6-recursos-y-documentación-rxjs)
-  - [7: Hot y Cold Observables](#7-hot-y-cold-observables)
+  - [6: Operadores que trabajan con tiempo](#6-operadores-que-trabajan-con-tiempo)
+    - [debounceTime](#debouncetime)
+  - [7: Recursos y documentación RxJS](#7-recursos-y-documentación-rxjs)
+  - [8: Hot y Cold Observables](#8-hot-y-cold-observables)
 
 ## 1.0: Introducción a la programación Reactiva
 
@@ -741,13 +743,46 @@ from(personajes)
   .subscribe(console.log);
 ```
 
-## 6: Recursos y documentación RxJS
+## 6: Operadores que trabajan con tiempo
+
+### debounceTime
+
+*Source*: https://rxjs-dev.firebaseapp.com/api/operators/debounceTime
+
+- Trabaja en base a intervalos de tiempo
+- Ayuda a contar las milésimas de segundo que han pasado desde la última emisión
+- Si esa milésima de segundo sobrepasa el parámetro que tenemos en los paréntesis entonces emitirá dicho valor
+
+```js
+const click$ = fromEvent<MouseEvent>(document, "click");
+
+click$.pipe(
+    // Si empiezo a hacer clicks se emitirá un valor 3 segundos después de haber hecho el último click, antes no
+    // Si tuviera una búsqueda onkeyup, se emitirá el valor si transcurren 3 segundos sin que se haga ningún keyup
+    // Por lo tanto, después de los 3 segundos se hará solamente UNA emisión
+    debounceTime(3000) 
+).subscribe(console.log);
+
+// Ejemplo 2
+const input = document.createElement("input");
+document.querySelector("body").append(input);
+
+const input$ = fromEvent(input, "keyup");
+input$.pipe(
+    debounceTime(1000),
+    distinctUntilChanged() // Con esto controlamos además que la emisión se haga siempre que el valor no sea el mismo que el valor de la emisión anterior
+).subscribe(console.log);
+```
+
+---
+
+## 7: Recursos y documentación RxJS
 
 * [RxJS Github](https://github.com/ReactiveX/rxjs)
 * [RxMarbles](http://rxmarbles.com/)
 * [RxVision Playground](http://jaredforsyth.com/rxvision/examples/playground/)
 
-## 7: Hot y Cold Observables
+## 8: Hot y Cold Observables
 
 La diferencia entre hot observables y cold observables radica en cómo se manejan los eventos pasados cuando hay nuevos suscriptores. Los hot observables no transmiten los eventos pasados a los nuevos suscriptores, mientras que los cold observables proporcionan todos los eventos, incluidos los pasados, a cada suscriptor.
 
