@@ -36,6 +36,7 @@
     - [throttleTime](#throttletime)
     - [sampleTime](#sampletime)
     - [sample](#sample)
+    - [auditTime](#audittime)
   - [7: Recursos y documentación RxJS](#7-recursos-y-documentación-rxjs)
   - [8: Hot y Cold Observables](#8-hot-y-cold-observables)
 
@@ -838,6 +839,23 @@ sampledObservable.subscribe(value => console.log(value));
 ```
 
 ---
+
+### auditTime
+
+*Source*: https://rxjs-dev.firebaseapp.com/api/operators/auditTime
+
+- Se utiliza para obtener una muestra del último valor emitido por un observable después de un intervalo de tiempo específico
+
+```js
+// Crea un observable que emite un valor cada 500 milisegundos
+const observable = interval(500);
+
+// Aplica el operador auditTime para obtener una muestra cada 2 segundos
+const auditedObservable = observable.pipe(auditTime(2000));
+
+// Suscríbete al auditedObservable para recibir las muestras
+auditedObservable.subscribe(value => console.log(value));
+```
 
 ## 7: Recursos y documentación RxJS
 
