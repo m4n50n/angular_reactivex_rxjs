@@ -1,6 +1,6 @@
 import { Observable, Observer, Subject } from "rxjs"; // Lo que importemos directamente de "rxjs" significa que será algo para crear observables o algún tipo de tipados como el subject
 
-// El subject es un tipo despecial de Observable
+// El subject es un tipo especial de Observable
 // https://rxjs.dev/guide/subject
 
 /**

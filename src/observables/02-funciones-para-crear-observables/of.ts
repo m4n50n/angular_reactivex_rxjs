@@ -24,7 +24,7 @@ console.log("Inicio del observable$"); // Con estos console.log() demostramos qu
 observable$.subscribe({
   next: (value) => console.log("[next]: ", value),
   error: (error) => console.warn("[error]: ", error),
-  complete: () => console.info("[complete] Secuencia terminada"),
+  complete: () => console.info("[complete] Secuencia terminada")
 });
 console.log("Fin del observable$");
 console.log("-------------------------------");

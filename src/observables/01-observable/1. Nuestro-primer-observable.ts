@@ -21,7 +21,7 @@ const obs$ = new Observable<string>(subscriber => {
 
 /**
  * IMPORTANTE
- * Para que un Observable se ejecute, tiene que tener por lo menos una suscripción
+ * Para que un Observable se ejecute tiene que tener por lo menos una suscripción
  * porque el subscriber notificará a las suscripciones, y si no hay suscripciones no notificará nada
  */
 obs$.subscribe(resp => console.log(resp));
