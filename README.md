@@ -42,6 +42,7 @@
     - [mergeMap](#mergemap)
     - [switchMap](#switchmap)
     - [concatMap](#concatmap)
+    - [exhaustMap](#exhaustmap)
   - [8: Recursos y documentación RxJS](#8-recursos-y-documentación-rxjs)
   - [9: Hot y Cold Observables](#9-hot-y-cold-observables)
 
@@ -1032,6 +1033,36 @@ En resumen, concatMap te permite transformar los valores de un observable en otr
 ```
 
 ---
+
+### exhaustMap
+
+
+*Source*: https://rxjs-dev.firebaseapp.com/api/operators/exhaustMap
+
+- Se utiliza para transformar los valores emitidos por un observable en otro observable, pero solo suscribe al observable interno si no hay otras suscripciones activas en ese momento. Esto significa que se ignorarán los nuevos valores emitidos mientras haya una suscripción activa
+
+```js
+// Obtén el botón de inicio del temporizador
+const startButton = document.createElement("button");
+document.querySelector("body").append(startButton);
+
+// Crea un observable desde el evento de clic en el botón
+const click$ = fromEvent(startButton, 'click');
+
+// Utiliza exhaustMap para iniciar un temporizador solo si no hay una suscripción activa
+click$
+  .pipe(
+    exhaustMap(() =>
+      interval(1000).pipe(
+        take(5) // Limita el temporizador a 5 emisiones
+      )
+    )
+  )
+  .subscribe((value) => {
+    console.log(value);
+    // Realiza acciones con los valores emitidos por el temporizador
+  });
+```
 
 ## 8: Recursos y documentación RxJS
 
