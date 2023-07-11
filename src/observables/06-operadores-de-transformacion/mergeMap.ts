@@ -1,4 +1,4 @@
-import { mergeMap, of } from "rxjs";
+import { fromEvent, interval, mergeMap, of, takeUntil } from "rxjs";
 
 /**
  * https://rxjs-dev.firebaseapp.com/api/operators/mergeMap
@@ -13,6 +13,7 @@ import { mergeMap, of } from "rxjs";
  *  - Projects each source value to an Observable which is merged in the output Observable
  *  - mergeMap<T, R, O extends ObservableInput<any>>(project: (value: T, index: number) => O, resultSelector?: number | ((outerValue: T, innerValue: ObservedValueOf<O>, outerIndex: number, innerIndex: number) => R), concurrent: number = Infinity): OperatorFunction<T, ObservedValueOf<O> | R>
  */
+// Ejemplo 1
 // Creamos un observable fuente con algunos valores
 const source = of(1, 2, 3);
 
@@ -26,3 +27,14 @@ const example = source.pipe(
 
 // Subscribimos y recibimos todas las emisiones de los observables resultantes
 example.subscribe(value => console.log(value));
+
+// Ejemplo 2: Calcular cuánto tiempo tiene el usuario el click pulsado
+const mousedown$ = fromEvent(document, "mousedown");
+const mouseup$ = fromEvent(document, "mouseup");
+const interval$ = interval();
+
+mousedown$.pipe(
+  mergeMap(() => interval$.pipe(
+    takeUntil(mouseup$)
+  ))
+).subscribe(console.log);

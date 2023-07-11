@@ -37,7 +37,7 @@
     - [sampleTime](#sampletime)
     - [sample](#sample)
     - [auditTime](#audittime)
-  - [7: Operadores de transformación](#7-operadores-de-transformación)
+  - [7: Operadores de transformación o aplanamiento](#7-operadores-de-transformación-o-aplanamiento)
     - [mergeAll](#mergeall)
     - [mergeMap](#mergemap)
   - [8: Recursos y documentación RxJS](#8-recursos-y-documentación-rxjs)
@@ -860,7 +860,7 @@ const auditedObservable = observable.pipe(auditTime(2000));
 auditedObservable.subscribe(value => console.log(value));
 ```
 
-## 7: Operadores de transformación
+## 7: Operadores de transformación o aplanamiento
 
 > Los operadores de transformación en RxJS, como mergeAll, mergeMap, etc., son necesarios para manipular y transformar secuencias de eventos en flujos de datos observables. Estos operadores permiten realizar tareas como combinar, filtrar, transformar y manipular los valores emitidos por los observables.
 >
@@ -881,6 +881,7 @@ const numeros$ = of(pares$, impares$).pipe(
 );
 
 // Suscripción al flujo resultante
+// En este caso, pares$ devuelve un observable e impares$ devuelve otro. Con mergeAll() obtendremos todos los valores emitidos  por cada observable que está dentro del flujo principal
 numeros$.subscribe(numero => console.log(numero));
 ```
 
@@ -926,6 +927,7 @@ input$
 - Toma cada valor emitido por el observable fuente y lo transforma en otro observable. Luego, combina todas las emisiones de los observables resultantes en una sola secuencia
 
 ```js
+// Ejemplo 1
 // Creamos un observable fuente con algunos valores
 const source = of(1, 2, 3);
 
@@ -939,6 +941,17 @@ const example = source.pipe(
 
 // Subscribimos y recibimos todas las emisiones de los observables resultantes
 example.subscribe(value => console.log(value));
+
+// Ejemplo 2: Calcular cuánto tiempo tiene el usuario el click pulsado
+const mousedown$ = fromEvent(document, "mousedown");
+const mouseup$ = fromEvent(document, "mouseup");
+const interval$ = interval();
+
+mousedown$.pipe(
+  mergeMap(() => interval$.pipe(
+    takeUntil(mouseup$)
+  ))
+).subscribe(console.log);
 ```
 
 ---
