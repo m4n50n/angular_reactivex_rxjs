@@ -46,6 +46,7 @@
   - [8: Operadores y métodos de combinación de observables](#8-operadores-y-métodos-de-combinación-de-observables)
     - [startWith](#startwith)
     - [endWith](#endwith)
+    - [concat (función)](#concat-función)
   - [9: Recursos y documentación RxJS](#9-recursos-y-documentación-rxjs)
   - [10: Hot y Cold Observables](#10-hot-y-cold-observables)
 
@@ -1091,6 +1092,26 @@ const numeros$ = of(1, 2, 3);
 
 numeros$.pipe(
     endWith(4) // 4 será la última emisión después de que el observable of emita sus valores
+).subscribe(console.log);
+```
+
+---
+
+### concat (función)
+
+*Source*: https://rxjs-dev.firebaseapp.com/api/index/function/concat
+
+- Es la función concat (no el operador - que está obsoleto -)
+ - Es una función que recibe observables como argumento y creará un nuevo observable
+
+```js
+const interval$ = interval(1000); // Este observable emitirá valores de manera secuencial cada 1000 milisegundos (1 segundo)
+
+// En el siguiente ejemplo, concat combinará dos observables en uno solo y mantener un orden secuencial en las emisiones
+// De forma que primero se emitirán los valores del primer observable y cuando se complete se emitirá los valores del segundo observable y así
+concat(
+    interval$.pipe(take(3)),
+    interval$.pipe(take(2))
 ).subscribe(console.log);
 ```
 
