@@ -48,6 +48,7 @@
     - [endWith](#endwith)
     - [concat (función)](#concat-función)
     - [merge (función)](#merge-función)
+    - [combineLatest (función)](#combinelatest-función)
   - [9: Recursos y documentación RxJS](#9-recursos-y-documentación-rxjs)
   - [10: Hot y Cold Observables](#10-hot-y-cold-observables)
 
@@ -1133,6 +1134,37 @@ merge( // La salida de este merge es el producto de ambas emisiones
     keyup$.pipe(pluck("type")), 
     click$.pipe(pluck("type"))
 ).subscribe(console.log);
+```
+
+---
+
+### combineLatest (función)
+
+*Source*: https://rxjs-dev.firebaseapp.com/api/index/function/combineLatest
+
+- Es la función combineLatest
+- Es una función que permite mandar observables como argumento, combinarlos, y emitir todos los valores de los observables internos simultáneamente
+- Retorna un nuevo observable que emitirá valores hasta que todos los observables internos hayan emitido al menos un valor
+
+```js
+const input1 = document.createElement("input");
+const input2 = document.createElement("input");
+
+input1.placeholder = "email@gmail.com";
+input2.placeholder = "***************";
+input2.type = "password";
+document.querySelector("body").append(input1, input2);
+
+// Helper
+const getInputStream = (element: HTMLElement) =>
+    fromEvent<KeyboardEvent>(element, "keyup").pipe(
+        pluck("target", "value")
+    );
+
+combineLatest(
+    getInputStream(input1),
+    getInputStream(input2)
+).subscribe(console.log); // Los valores se emitirán cuando cada observable interno haya emitido al menos un valor
 ```
 
 ---
