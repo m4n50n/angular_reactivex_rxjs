@@ -47,6 +47,7 @@
     - [startWith](#startwith)
     - [endWith](#endwith)
     - [concat (función)](#concat-función)
+    - [merge (función)](#merge-función)
   - [9: Recursos y documentación RxJS](#9-recursos-y-documentación-rxjs)
   - [10: Hot y Cold Observables](#10-hot-y-cold-observables)
 
@@ -1102,7 +1103,7 @@ numeros$.pipe(
 *Source*: https://rxjs-dev.firebaseapp.com/api/index/function/concat
 
 - Es la función concat (no el operador - que está obsoleto -)
- - Es una función que recibe observables como argumento y creará un nuevo observable
+- Es una función que recibe observables como argumento y creará un nuevo observable
 
 ```js
 const interval$ = interval(1000); // Este observable emitirá valores de manera secuencial cada 1000 milisegundos (1 segundo)
@@ -1112,6 +1113,25 @@ const interval$ = interval(1000); // Este observable emitirá valores de manera 
 concat(
     interval$.pipe(take(3)),
     interval$.pipe(take(2))
+).subscribe(console.log);
+```
+
+---
+
+### merge (función)
+
+*Source*: https://rxjs-dev.firebaseapp.com/api/index/function/merge
+
+- Es la función merge
+- Es una función que recibe observables como argumento y el resultado será el producto de los observables combinados simultáneamente
+
+```js
+const keyup$ = fromEvent(document, "keyup");
+const click$ = fromEvent(document, "click");
+
+merge( // La salida de este merge es el producto de ambas emisiones
+    keyup$.pipe(pluck("type")), 
+    click$.pipe(pluck("type"))
 ).subscribe(console.log);
 ```
 
