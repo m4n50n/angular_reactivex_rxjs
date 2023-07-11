@@ -902,6 +902,9 @@ input$
     debounceTime(500),
     map((texto) =>
       ajax.getJSON(`https://api.github.com/search/users?q=${texto}`)
+      // Al utilizar mergeAll(), se suscribe a cada observable interno y se emiten sus valores
+      // En este caso, el observable interno se crea con ajax.getJSON(), que realiza una solicitud HTTP a la URL proporcionada y devuelve un observable que emite la respuesta JSON
+      // En cambio, si no se pone mergeAll(), el flujo de observables no se aplana y se suscribe directamente al observable que devuelve ajax.getJSON(). Debido a esto, solo se obtiene el observable en sí mismo, pero no se emite la respuesta JSON.
     ),
     mergeAll()
     // La función ajax.getJSON devuelve un observable que emite la respuesta JSON de la solicitud
