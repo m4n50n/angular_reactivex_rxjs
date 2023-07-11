@@ -45,6 +45,7 @@
     - [exhaustMap](#exhaustmap)
   - [8: Operadores y métodos de combinación de observables](#8-operadores-y-métodos-de-combinación-de-observables)
     - [startWith](#startwith)
+    - [endWith](#endwith)
   - [9: Recursos y documentación RxJS](#9-recursos-y-documentación-rxjs)
   - [10: Hot y Cold Observables](#10-hot-y-cold-observables)
 
@@ -1074,6 +1075,22 @@ const numeros$ = of(1, 2, 3);
 
 numeros$.pipe(
     startWith(0) // 0 será la primera emisión antes de que el observable of emita sus valores
+).subscribe(console.log);
+```
+
+---
+
+### endWith
+
+*Source*: https://rxjs-dev.firebaseapp.com/api/operators/endWith
+
+- Permite realizar una emisión antes de que el observable se complete
+
+```js
+const numeros$ = of(1, 2, 3);
+
+numeros$.pipe(
+    endWith(4) // 4 será la última emisión después de que el observable of emita sus valores
 ).subscribe(console.log);
 ```
 
