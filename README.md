@@ -49,6 +49,7 @@
     - [concat (función)](#concat-función)
     - [merge (función)](#merge-función)
     - [combineLatest (función)](#combinelatest-función)
+    - [forkJoin](#forkjoin)
   - [9: Recursos y documentación RxJS](#9-recursos-y-documentación-rxjs)
   - [10: Hot y Cold Observables](#10-hot-y-cold-observables)
 
@@ -1168,6 +1169,27 @@ combineLatest(
 ```
 
 ---
+
+### forkJoin
+
+*Source*: https://rxjs-dev.firebaseapp.com/api/index/function/forkJoin
+
+- Puede recibir varios observables como argumento
+- Los observables internos deben ser finitos. Si no, forkJoin no emitiría ningún valor 
+
+```js
+const numeros$ = of(1,2,3,4);
+const intervalo$ = interval(1000).pipe(take(3)); // Limitamos a 3 emisiones con take puesto que el observable debe ser finito e interval es infinito
+const letras$ = of("a", "b", "c").pipe(delay(3500));
+
+forkJoin({
+    numeros$,
+    intervalo$,
+    letras$
+}).subscribe(resp => {
+    console.log(resp);
+});
+```
 
 ## 9: Recursos y documentación RxJS
 
