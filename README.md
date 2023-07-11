@@ -43,8 +43,10 @@
     - [switchMap](#switchmap)
     - [concatMap](#concatmap)
     - [exhaustMap](#exhaustmap)
-  - [8: Recursos y documentación RxJS](#8-recursos-y-documentación-rxjs)
-  - [9: Hot y Cold Observables](#9-hot-y-cold-observables)
+  - [8: Operadores y métodos de combinación de observables](#8-operadores-y-métodos-de-combinación-de-observables)
+    - [startWith](#startwith)
+  - [9: Recursos y documentación RxJS](#9-recursos-y-documentación-rxjs)
+  - [10: Hot y Cold Observables](#10-hot-y-cold-observables)
 
 ## 1.0: Introducción a la programación Reactiva
 
@@ -890,7 +892,6 @@ numeros$.subscribe(numero => console.log(numero));
 
 ### mergeAll
 
-
 *Source*: https://rxjs-dev.firebaseapp.com/api/operators/mergeAll
 
 - Combina los observables que se emiten dentro del flujo principal
@@ -922,7 +923,6 @@ input$
 ---
 
 ### mergeMap
-
 
 *Source*: https://rxjs-dev.firebaseapp.com/api/operators/mergeMap
 
@@ -961,7 +961,6 @@ mousedown$.pipe(
 
 ### switchMap
 
-
 *Source*: https://rxjs-dev.firebaseapp.com/api/operators/switchMap
 
 - Es un operador que, al igual que mergeMap() recibe un callback que retorna un observable que emitirá valores a los suscriptores
@@ -996,7 +995,6 @@ input$
 ---
 
 ### concatMap
-
 
 *Source*: https://rxjs-dev.firebaseapp.com/api/operators/concatMap
 
@@ -1036,7 +1034,6 @@ En resumen, concatMap te permite transformar los valores de un observable en otr
 
 ### exhaustMap
 
-
 *Source*: https://rxjs-dev.firebaseapp.com/api/operators/exhaustMap
 
 - Se utiliza para transformar los valores emitidos por un observable en otro observable, pero solo suscribe al observable interno si no hay otras suscripciones activas en ese momento. Esto significa que se ignorarán los nuevos valores emitidos mientras haya una suscripción activa
@@ -1064,13 +1061,31 @@ click$
   });
 ```
 
-## 8: Recursos y documentación RxJS
+## 8: Operadores y métodos de combinación de observables
+
+### startWith
+
+*Source*: https://rxjs-dev.firebaseapp.com/api/operators/startWith
+
+- Permite realizar una emisión antes de que el observable empiece a emitir
+
+```js
+const numeros$ = of(1, 2, 3);
+
+numeros$.pipe(
+    startWith(0) // 0 será la primera emisión antes de que el observable of emita sus valores
+).subscribe(console.log);
+```
+
+---
+
+## 9: Recursos y documentación RxJS
 
 * [RxJS Github](https://github.com/ReactiveX/rxjs)
 * [RxMarbles](http://rxmarbles.com/)
 * [RxVision Playground](http://jaredforsyth.com/rxvision/examples/playground/)
 
-## 9: Hot y Cold Observables
+## 10: Hot y Cold Observables
 
 La diferencia entre hot observables y cold observables radica en cómo se manejan los eventos pasados cuando hay nuevos suscriptores. Los hot observables no transmiten los eventos pasados a los nuevos suscriptores, mientras que los cold observables proporcionan todos los eventos, incluidos los pasados, a cada suscriptor.
 
