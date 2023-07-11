@@ -50,6 +50,7 @@
     - [merge (función)](#merge-función)
     - [combineLatest (función)](#combinelatest-función)
     - [forkJoin](#forkjoin)
+      - [El caso más común con forkJoin](#el-caso-más-común-con-forkjoin)
   - [9: Recursos y documentación RxJS](#9-recursos-y-documentación-rxjs)
   - [10: Hot y Cold Observables](#10-hot-y-cold-observables)
 
@@ -1189,6 +1190,18 @@ forkJoin({
 }).subscribe(resp => {
     console.log(resp);
 });
+```
+
+#### El caso más común con forkJoin
+
+> El caso más común con forkJoin es realizar peticiones ajax de manera simultánea
+
+```javascript
+forkJoin({
+    usuario: ajax.getJSON(`${GITHUB_API_URL}/${GITHUB_USER}`),
+    repos: ajax.getJSON(`${GITHUB_API_URL}/${GITHUB_USER}/repos`),
+    gists: ajax.getJSON(`${GITHUB_API_URL}/${GITHUB_USER}/gists`),
+  }).subscribe(console.log); // Se realizarán las tres peticiones de manera simultánea y cuando se terminen se emitirán al subscriber
 ```
 
 ## 9: Recursos y documentación RxJS
